@@ -634,7 +634,7 @@
     function afficherHistoireCourante() {
         const hist = protocolHistoires[indexHistoireActive];
         document.getElementById('titre-histoire-courante').innerText = hist.title;
-        document.getElementById('img-bd-source').src = `story${hist.id}.png`;
+        document.getElementById('img-bd-source').src = `./story${hist.id}.png`;
         document.getElementById('texte-arabe-contenu').innerText = hist.textArabe;
 
         const containerQuestions = document.getElementById('bloc-questions-dynamiques');
