@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test du faux pas - Station d'Évaluation Neuropsychologique</title>
+    <style>
+        /* --- CHARTE GRAPHIQUE : FOND TURQUOISE & DESIGN MODERNE --- */
+        :root {
+            --bg-turquoise: #06b6d4; 
+            --bg-light-turquoise: #ecfeff; 
+            --primary-dark: #0891b2; 
+            --accent-color: #0f766e; 
+            --text-main: #1e293b;
+            --border-color: #bae6fd;
+            
+            --color-normal: #10b981;  
+            --color-modere: #f97316;  
+            --color-severe: #ef4444;  
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-turquoise) 0%, #22d3ee 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            font-size: 32px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            font-size: 22px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--bg-turquoise);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            font-size: 18px;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-institutionnel {
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            color: #1e293b;
+            line-height: 1.6;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed var(--bg-turquoise);
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .btn-primary { background-color: var(--primary-dark); color: white; }
+        .btn-primary:hover { background-color: var(--accent-color); transform: translateY(-2px); }
+        .btn-secondary { background-color: #64748b; color: white; }
+        .btn-secondary:hover { background-color: #475569; transform: translateY(-2px); }
+        .btn-success { background-color: var(--color-normal); color: white; }
+
+        .btn-score-select {
+            padding: 10px 20px;
+            border: 2px solid #cbd5e1;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-score-select.selected[data-val="1"] {
+            background-color: var(--color-normal);
+            color: white;
+            border-color: var(--color-normal);
+        }
+
+        .btn-score-select.selected[data-val="0"] {
+            background-color: var(--color-severe);
+            color: white;
+            border-color: var(--color-severe);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label { font-weight: 600; color: #475569; }
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary-dark); }
+
+        .image-bd-space {
+            width: 100%;
+            height: 260px;
+            background-color: #f1f5f9;
+            border: 3px dashed var(--bg-turquoise);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .image-bd-space img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .text-histoire-arabe {
+            direction: rtl;
+            font-size: 22px;
+            line-height: 1.7;
+            background-color: var(--bg-light-turquoise);
+            padding: 25px;
+            border-radius: 12px;
+            border-right: 6px solid var(--primary-dark);
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            text-align: justify;
+        }
+
+        .question-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .question-text-ar {
+            direction: rtl;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+
+        .question-meta {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: white;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .status-green { background-color: var(--color-normal); }
+        .status-orange { background-color: var(--color-modere); }
+        .status-red { background-color: var(--color-severe); }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .report-table th, .report-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .report-table th {
+            background-color: var(--bg-light-turquoise);
+            color: var(--accent-color);
+        }
+
+        .icone-clinique {
+            font-size: 22px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        .evolution-panel {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+        }
+
+        @media print {
+            body { background: white !important; padding: 0; color: #000; }
+            .container { box-shadow: none !important; border: none !important; max-width: 100% !important; background: white !important; padding: 0; }
+            .no-print, .nav-bar, .btn, .btn-score-select { display: none !important; }
+            .page-section { display: none !important; }
+            .page-section#section-report { display: block !important; }
+            h1, h2, h3 { color: #000 !important; border-color: #000 !important; }
+            .report-table th { background-color: #f1f5f9 !important; color: #000 !important; }
+            .badge-status { border: 1px solid #000; color: #000 !important; background: transparent !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="section-garde" class="page-section active">
+        <div class="header-institutionnel">
+            République Algérienne Démocratique et Populaire<br>
+            Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br>
+            Faculté de Médecine Badji Mokhtar Annaba<br>
+            Unité de Neuroscience et de Cognition EHS ERRAZI Annaba
+        </div>
+        
+        <div style="margin: 110px 0; text-align: center;">
+            <h1>Test du faux pas</h1>
+            <h3 style="justify-content: center; font-size: 22px; font-style: italic; color: #475569; font-weight: normal; margin-top: 15px;">
+                by SAYAD Karima
+            </h3>
+        </div>
+
+        <div class="nav-bar" style="justify-content: center; border: none; margin-top: 100px;">
+            <button class="btn btn-primary" onclick="changerSection('section-formulaire')">🎯 Accéder au Formulaire Patient</button>
+        </div>
+    </div>
+
+    <div id="section-formulaire" class="page-section">
+        <h2>📋 Identification Clinique du Patient</h2>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Code Patient :</label>
+                <input type="text" id="p-code" placeholder="Ex: FP-2026-001" oninput="chargerHistoriqueEvolution()">
+            </div>
+            <div class="form-group">
+                <label>Date de l'Examen :</label>
+                <input type="date" id="p-date">
+            </div>
+            <div class="form-group">
+                <label>Nom :</label>
+                <input type="text" id="p-nom">
+            </div>
+            <div class="form-group">
+                <label>Prénom :</label>
+                <input type="text" id="p-prenom">
+            </div>
+            <div class="form-group">
+                <label>Âge :</label>
+                <input type="number" id="p-age" min="0">
+            </div>
+            <div class="form-group">
+                <label>Sexe :</label>
+                <select id="p-sexe">
+                    <option value="">-- Choisir --</option>
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                </select>
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Nom de l'Examinateur :</label>
+                <input type="text" id="p-examinateur" value="Pr Sayad Karima">
+            </div>
+        </div>
+
+        <div id="panel-evolution-prev" class="evolution-panel" style="display:none;">
+            <h3 style="margin: 0 0 10px 0; color: var(--accent-color);">🔄 Sessions antérieures enregistrées</h3>
+            <table class="report-table" id="table-sessions-prev" style="margin: 10px 0; font-size: 13px;"></table>
+        </div>
+
+        <div class="nav-bar">
+            <button class="btn btn-secondary" onclick="changerSection('section-garde')">⬅️ Page de Garde</button>
+            <button class="btn btn-primary" onclick="initierTest()">🚀 Commencer le Test</button>
+        </div>
+    </div>
+
+    <div id="section-passation" class="page-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 id="titre-histoire-courante" style="border:none; margin:0;">Histoire X / 10</h2>
+        </div>
+
+        <div class="image-bd-space">
+            <img id="img-bd-source" src="" alt="Espace dédié BD de l'histoire en image (storyX.png)">
+        </div>
+
+        <div id="texte-arabe-contenu" class="text-histoire-arabe"></div>
+        <div id="bloc-questions-dynamiques"></div>
+
+        <div class="nav-bar">
+            <button class="btn btn-secondary" id="btn-histoire-prec" onclick="histoirePrecedente()">⬅️ Histoire Précédente</button>
+            <button class="btn btn-success" id="btn-histoire-suiv" onclick="histoireSuivante()">Histoire Suivante ➡️</button>
+        </div>
+    </div>
+
+    <div id="section-report" class="page-section">
+        <div class="header-institutionnel">
+            République Algérienne Démocratique et Populaire<br>
+            Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br>
+            Faculté de Médecine Badji Mokhtar Annaba<br>
+            Unité de Neuroscience et de Cognition EHS ERRAZI Annaba
+        </div>
+
+        <h1 style="font-size: 24px; margin-bottom: 5px;">Rapport Sémiologique du Test du Faux Pas</h1>
+        <p style="text-align:center; font-style:italic; font-size:14px; color:#64748b; margin-bottom:25px;">
+            Compte rendu clinique automatisé et trajectoire d'évolution
+        </p>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:25px;">
+            <tr style="background:#f8fafc;">
+                <td style="padding:10px; border:1px solid #cbd5e1;"><strong>Code Patient :</strong> <span id="rep-code"></span></td>
+                <td style="padding:10px; border:1px solid #cbd5e1;"><strong>Date de l'examen :</strong> <span id="rep-date"></span></td>
+            </tr>
+            <tr>
+                <td style="padding:10px; border:1px solid #cbd5e1;"><strong>Nom & Prénom :</strong> <span id="rep-identite"></span></td>
+                <td style="padding:10px; border:1px solid #cbd5e1;"><strong>Examinateur :</strong> <span id="rep-examinateur"></span></td>
+            </tr>
+            <tr style="background:#f8fafc;">
+                <td style="padding:10px; border:1px solid #cbd5e1;"><strong>Âge :</strong> <span id="rep-age"></span> ans</td>
+                <td style="padding:10px; border:1px solid #cbd5e1;"><strong>Sexe :</strong> <span id="rep-sexe"></span></td>
+            </tr>
+        </table>
+
+        <h3><span class="icone-clinique">📊</span> 1. Profil Quantitatif de la Cognition Sociale</h3>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Composante de la Théorie de l'Esprit (ToM)</th>
+                    <th>Score</th>
+                    <th>Exactitude</th>
+                    <th>Statut Sémiologique</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ToM Cognitive Globale</strong></td>
+                    <td><span id="r-sc-cog"></span> / 20</td>
+                    <td><span id="r-pc-cog"></span>%</td>
+                    <td><div id="r-badge-cog"></div></td>
+                </tr>
+                <tr>
+                    <td><strong>ToM Affective Globale</strong></td>
+                    <td><span id="r-sc-aff"></span> / 5</td>
+                    <td><span id="r-pc-aff"></span>%</td>
+                    <td><div id="r-badge-aff"></div></td>
+                </tr>
+                <tr>
+                    <td><strong>Histoires Témoins / Contrôle</strong></td>
+                    <td><span id="r-sc-tet"></span> / 5</td>
+                    <td><span id="r-pc-tet"></span>%</td>
+                    <td><div id="r-badge-tet"></div></td>
+                </tr>
+                <tr>
+                    <td><strong>Indice de Contrôle Mnésique</strong></td>
+                    <td><span id="r-sc-mem"></span> / 10</td>
+                    <td><span id="r-pc-mem"></span>%</td>
+                    <td><div id="r-badge-mem"></div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3><span class="icone-clinique">🧠</span> 2. Analyse Sémiologique Approfondie</h3>
+        <div id="analyse-semiologique-corps" style="line-height:1.6; text-align:justify; background:#ffffff; padding:15px; border-radius:8px;"></div>
+
+        <h3><span class="icone-clinique">📈</span> 3. Suivi Comparatif et Trajectoire Évolutive</h3>
+        <div id="corps-comparatif" style="background: #ffffff; padding:15px; border-radius:8px;"></div>
+
+        <h3><span class="icone-clinique">📋</span> 4. Conclusions Cliniques & Recommandations Thérapeutiques</h3>
+        <div id="conclusion-recommandations-corps" style="line-height:1.6; text-align:justify; background: #fafafa; padding:15px; border-radius:8px; border-left: 4px solid var(--primary-dark);"></div>
+
+        <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+            <div><p><strong>Cachet de l'Unité Neurosciences</strong></p></div>
+            <div style="text-align: right;">
+                <p><strong>Signature de l'Examinateur</strong></p>
+                <p style="font-style:italic; color: var(--accent-color);">Pr Sayad Karima</p>
+            </div>
+        </div>
+
+        <div class="nav-bar no-print">
+            <button class="btn btn-secondary" onclick="changerSection('section-formulaire')">🔄 Re-tester / Corriger</button>
+            <button class="btn btn-primary" style="background-color: var(--accent-color);" onclick="window.print()">🖨️ Imprimer le Compte Rendu</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const protocolHistoires = [
+        {
+            id: 1, isFauxPas: false, title: "Histoire 1 : حفلة الانتقال",
+            textArabe: "أقام سمير حفلة بمناسبة انتقاله إلى منزله الجديد. وبينما كان في المطبخ يحضر المشروبات للجميع، وصلت ضيفة تُدعى مريم. فالتفتت نحوها ضيفة أخرى تُدعى هدى وقالت لها: \"لا أظن أننا تعارفنا من قبل، أنا هدى، ما اسمكِ؟\" فردت مريم: \"أنا مريم\". وعند عودة سمير سأل: \"هل يريد أحدكم مشروباً؟\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: أين كان سمير عندما وصلت مريم؟" }
+            ]
+        },
+        {
+            id: 2, isFauxPas: true, title: "Histoire 2 : ستائر نادية",
+            textArabe: "انتقلت نادية للتو إلى شقة جديدة، وااشترت ستائر جديدة لغرفة الجلوس. عندما جاءت صديقتها لمياء لزيارتها، أخذتها نادية في جولة في الشقة وسألتها: \"ما رأيكِ في غرفة الجلوس؟\" فأجابت لمياء: \"أوه، هذه الستائر بشعة حقاً، أتمنى أن تغيريها!\". فقالت نادية: \"آه...\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q2", type: "identification", labelAr: "ما هو الشيء الذي قيل ولم يكن ينبغي قوله؟" },
+                { qId: "q3", type: "incongruence", labelAr: "لماذا لم يكن يعلم (القائل) أنه لا ينبغي عليه قول ذلك？" },
+                { qId: "q4", type: "intention", labelAr: "هل تقصد الشخص إيذاء المشاعر أو قول ذلك عمداً؟" },
+                { qId: "q5", type: "empathy", labelAr: "كيف شعر الشخص الذي سمع هذا الكلام؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ماذا اشترت نادية لغرفة الجلوس الجديدة؟" }
+            ]
+        },
+        {
+            id: 3, isFauxPas: false, title: "Histoire 3 : اختيار القميص",
+            textArabe: "كان جلال يبحث عن قميص يناسب بدلته. عرضه البائع عدة موديلات، فنظر إليها جلال ووجد أخيراً قميصاً باللون المناسب. ولكن عندما دخل إلى غرفة القياس لتجربته، لم يكن مقاسه مناسباً. فقال للبائع: \"أخشى أنه صغير جداً\". فأجابه البائع: \"لا تقلق، ستصلنا مقاسات أكبر الأسبوع المقبل\". فقال جلال: \"ممتاز، سأعود في ذلك الوقت\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ما المشكلة التي كانت في القميص الذي جربه جلال؟" }
+            ]
+        },
+        {
+            id: 4, isFauxPas: true, title: "Histoire 4 : المفاجأة المفسدة",
+            textArabe: "كان زوج سهام ينظم حفلة مفاجئة بمناسبة عيد ميلادها. وقبل يومين من الحفلة، دعت سهام صديقتها منى لتناول القهوة معاً. وأثناء حديثهما، سكبت منى القهوة بالخطأ على فستانها، فصرخت قائلة: \"أوه! كنت أريد ارتداء هذا الفستان في حفلة عيد ميلادكِ!\". فسألتها سهام: \"أي حفلة؟\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q2", type: "identification", labelAr: "ما هو الشيء الذي قيل ولم يكن ينبغي قوله？" },
+                { qId: "q3", type: "incongruence", labelAr: "لماذا لم يكن يعلم (القائل) أنه لا ينبغي عليه قول ذلك؟" },
+                { qId: "q4", type: "intention", labelAr: "هل تقصد الشخص إيذاء المشاعر أو قول ذلك عمداً؟" },
+                { qId: "q5", type: "empathy", labelAr: "كيف شعر الشخص الذي سمع هذا الكلام؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ماذا سكبت منى على فستانها بالخطأ؟" }
+            ]
+        },
+        {
+            id: 5, isFauxPas: false, title: "Histoire 5 : محطة الوقود",
+            textArabe: "توقف عادل في محطة وقود لملء خزان سيارته بالبنزين. ثم دخل إلى المحل ليدفع للمحاسبة وقال: \"خزان كامل من البنزين الخالي من الرصاص من فضلكِ\". فأجابت المحاسبة: \"الحساب 20 دولاراً (أو ديناراً) لو سمحت\". فأخرج عادل ورقة نقدية من جيبه وسلمها للمحاسبة وقال: \"احتفظي بالباقي\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: كم كان حساب البنزين الذي طلبه عادل؟" }
+            ]
+        },
+        {
+            id: 6, isFauxPas: false, title: "Histoire 6 : قصة شعر مراد",
+            textArabe: "ذهب مراد إلى الحلاق لقص شعره. فسأله الحلاق: \"كيف تحب أن أقصه؟\". فأجاب مراد: \"أريد فقط تقصيره قليلاً مع الحفاظ على نفس القصة\". وبدأ الحلاق في العمل. وفي النهاية، قال الحلاق: \"أخشى أنه أصبح أقصر قليلاً مما طلبته\". فقال مراد: \"أوه، لا بأس، سينمو مجدداً\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ماذا قال الحلاق لمراد في نهاية القصة؟" }
+            ]
+        },
+        {
+            id: 7, isFauxPas: true, title: "Histoire 7 : المزهرية الكريستالية",
+            textArabe: "بمناسبة زواج ابن عمها كريم، أهدت له مريم مزهرية كريستالية كبيرة مصنوعة يدوياً. وبعد مرور عام، ذهبت مريم لزيارة كريم. وأثناء سيرها في الرواق، اصطدمت بالخطأ بالمزهرية الموضوعة على الطاولة فكسرتها. اعتذرت مريم وقالت: \"أنا آسفة جداً، لقد كسرتُ مزهريتك\". فأجابه كريم: \"لا بأس، لم أكن أحبها على الإطلاق، لقد كانت هدية زفاف بشعة\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q2", type: "identification", labelAr: "ما هو الشيء الذي قيل ولم يكن ينبغي قوله؟" },
+                { qId: "q3", type: "incongruence", labelAr: "لماذا لم يكن يعلم (القائل) أنه لا ينبغي عليه قول ذلك؟" },
+                { qId: "q4", type: "intention", labelAr: "هل تقصد الشخص إيذاء المشاعر أو قول ذلك عمداً؟" },
+                { qId: "q5", type: "empathy", labelAr: "كيف شعر الشخص الذي سمع هذا الكلام؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ماذا أهدت مريم لكريم في زواجه؟" }
+            ]
+        },
+        {
+            id: 8, isFauxPas: false, title: "Histoire 8 : النزهة في الحديقة",
+            textArabe: "أخذت سناء كلبها \"ركس\" إلى الحديقة ليلعب، ورمت له عصا ليركض وراءها. وبعد فترة، مرت جارتها أمل من هناك، فتحدثتا معاً لبضع دقائق. ثم سألت أمل: \"هل أنتِ عائدة إلى البيت؟ هل ترغبين في أن نمشي معاً؟\" فأجابت سناء: \"بكل سرور\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ما هو اسم كلب سناء؟" }
+            ]
+        },
+        {
+            id: 9, isFauxPas: true, title: "Histoire 9 : السكرتيرة الجديدة",
+            textArabe: "تم توظيف سناء كسكرتيرة جديدة في شركة. وبينما كانت تسير في الرواق، التقت برجل فقالت له: \"مرحباً، أنا أبحث عن مكتب المدير العام. إنه رجل طاعن في السن وصارم جداً، وأنا متوترة قليلاً من مقابلته\". فابتسم الرجل وقال: \"المكتب هناك في نهاية الرواق. وبالمناسبة، أنا هو المدير\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q2", type: "identification", labelAr: "ما هو الشيء الذي قيل ولم يكن ينبغي قوله؟" },
+                { qId: "q3", type: "incongruence", labelAr: "لماذا لم يكن يعلم (القائل) أنه لا ينبغي عليه قول ذلك؟" },
+                { qId: "q4", type: "intention", labelAr: "هل تقصد الشخص إيذاء المشاعر أو قول ذلك عمداً؟" },
+                { qId: "q5", type: "empathy", labelAr: "كيف شعر الشخص الذي سمع هذا الكلام؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ما هي الوظيفة الجديدة التي توظفت بها سناء؟" }
+            ]
+        },
+        {
+            id: 10, isFauxPas: true, title: "Histoire 10 : تارت التفاح لجمال",
+            textArabe: "دعا جمال زملائه في العمل لتناول العشاء في منزله. وفي نهاية الوجبة، قدم حلوى حضرها بنفسه وهي \"تارت التفاح\". وقالت زميلته سهام عند تذوقها: \"أنا لا أحب تارت التفاح كثيراً، فغالباً ما تكون العجينة جافة جداً\". وعندما رأت علامات الخيبة على وجه جمال، أضافت مسرعة: \"آه، هل صنعتها بنفسك؟\".",
+            questions: [
+                { qId: "q1", type: "detection", labelAr: "هل قال أحد الأشخاص شيئاً ما كان ينبغي عليه قوله أو شيئاً غير لائق؟" },
+                { qId: "q2", type: "identification", labelAr: "ما هو الشيء الذي قيل ولم يكن ينبغي قوله؟" },
+                { qId: "q3", type: "incongruence", labelAr: "لماذا لم يكن يعلم (القائل) أنه لا ينبغي عليه قول ذلك؟" },
+                { qId: "q4", type: "intention", labelAr: "هل تقصد الشخص إيذاء المشاعر أو قول ذلك عمداً？" },
+                { qId: "q5", type: "empathy", labelAr: "كيف شعر الشخص الذي سمع هذا الكلام؟" },
+                { qId: "q6", type: "memoire", labelAr: "سؤال الذاكرة: ما هو نوع الحلوى التي حضرها جمال لزملائه؟" }
+            ]
+        }
+    ];
+
+    let indexHistoireActive = 0;
+    let scoresSessionEnCours = {};
+
+    function changerSection(sectionId) {
+        document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function chargerHistoriqueEvolution() {
+        const code = document.getElementById('p-code').value.trim();
+        const panelPrev = document.getElementById('panel-evolution-prev');
+        const tableSessions = document.getElementById('table-sessions-prev');
+        
+        if(!code) {
+            panelPrev.style.display = "none";
+            return;
+        }
+
+        let historique = JSON.parse(localStorage.getItem("ehs_errazi_fauxpas_db")) || [];
+        let filtre = historique.filter(item => item.codePatient.toLowerCase() === code.toLowerCase());
+
+        if(filtre.length > 0) {
+            panelPrev.style.display = "block";
+            let html = `<tr><th>Date de l'examen</th><th>ToM Cognitive (Max 20)</th><th>ToM Affective (Max 5)</th><th>Contrôle Mnésique (Max 10)</th></tr>`;
+            filtre.forEach(s => {
+                html += `<tr>
+                    <td>${s.dateExamen}</td>
+                    <td>${s.scoreCog} / 20</td>
+                    <td>${s.scoreAff} / 5</td>
+                    <td>${s.scoreMem} / 10</td>
+                </tr>`;
+            });
+            tableSessions.innerHTML = html;
+        } else {
+            panelPrev.style.display = "none";
+        }
+    }
+
+    function initierTest() {
+        const code = document.getElementById('p-code').value.trim();
+        const dateEx = document.getElementById('p-date').value;
+        if(!code || !dateEx) {
+            alert("⚠️ Veuillez renseigner le Code Patient ainsi que la Date de l'examen.");
+            return;
+        }
+
+        indexHistoireActive = 0;
+        scoresSessionEnCours = {};
+        
+        protocolHistoires.forEach(h => {
+            scoresSessionEnCours[h.id] = { q1: null, q2: null, q3: null, q4: null, q5: null, q6: null };
+        });
+
+        afficherHistoireCourante();
+        changerSection('section-passation');
+    }
+
+    function afficherHistoireCourante() {
+        const hist = protocolHistoires[indexHistoireActive];
+        document.getElementById('titre-histoire-courante').innerText = hist.title;
+        document.getElementById('img-bd-source').src = `story${hist.id}.png`;
+        document.getElementById('texte-arabe-contenu').innerText = hist.textArabe;
+
+        const containerQuestions = document.getElementById('bloc-questions-dynamiques');
+        containerQuestions.innerHTML = '';
+
+        const reponseQ1 = scoresSessionEnCours[hist.id].q1;
+        const sauterQuestionsToM = (hist.isFauxPas && reponseQ1 === 0);
+
+        hist.questions.forEach(q => {
+            if (sauterQuestionsToM && ["q2", "q3", "q4", "q5"].includes(q.qId)) {
+                scoresSessionEnCours[hist.id][q.qId] = 0; 
+                return;
+            }
+
+            const divQ = document.createElement('div');
+            divQ.className = "question-item";
+
+            let libelleType = "";
+            switch(q.type) {
+                case "detection": libelleType = "Détection de l'incongruence (ToM Cognitive)"; break;
+                case "identification": libelleType = "Identification de l'agent (ToM Cognitive)"; break;
+                case "incongruence": libelleType = "Analyse de la maladresse (ToM Cognitive)"; break;
+                case "intention": libelleType = "Inférence d'intentions / Croyance (ToM Cognitive)"; break;
+                case "empathy": libelleType = "ToM Affective (Résonance émotionnelle)"; break;
+                case "memoire": libelleType = "Contrôle Mnésique / Compréhension factuelle"; break;
+            }
+
+            const valeurActuelle = scoresSessionEnCours[hist.id][q.qId];
+
+            divQ.innerHTML = `
+                <div class="question-meta">${libelleType} [${q.qId.toUpperCase()}]</div>
+                <div class="question-text-ar">${q.labelAr}</div>
+                <div style="display:flex; gap:12px;">
+                    <button class="btn-score-select ${valeurActuelle === 1 ? 'selected' : ''}" data-val="1" onclick="coter(${hist.id}, '${q.qId}', 1)">Réponse Attendue (1 pt)</button>
+                    <button class="btn-score-select ${valeurActuelle === 0 ? 'selected' : ''}" data-val="0" onclick="coter(${hist.id}, '${q.qId}', 0)">Échec / Incorrect (0 pt)</button>
+                </div>
+            `;
+            containerQuestions.appendChild(divQ);
+        });
+
+        document.getElementById('btn-histoire-prec').style.visibility = indexHistoireActive === 0 ? 'hidden' : 'visible';
+        document.getElementById('btn-histoire-suiv').innerText = indexHistoireActive === protocolHistoires.length - 1 ? "📊 Générer le Rapport" : "Histoire Suivante ➡️";
+    }
+
+    function coter(histId, qId, pts) {
+        scoresSessionEnCours[histId][qId] = pts;
+
+        if(qId === "q1") {
+            const hist = protocolHistoires.find(h => h.id === histId);
+            if(hist.isFauxPas && pts === 0) {
+                scoresSessionEnCours[histId]["q2"] = 0;
+                scoresSessionEnCours[histId]["q3"] = 0;
+                scoresSessionEnCours[histId]["q4"] = 0;
+                scoresSessionEnCours[histId]["q5"] = 0;
+            }
+        }
+        afficherHistoireCourante();
+    }
+
+    function histoirePrecedente() {
+        if(indexHistoireActive > 0) {
+            indexHistoireActive--;
+            afficherHistoireCourante();
+        }
+    }
+
+    function histoireSuivante() {
+        const hist = protocolHistoires[indexHistoireActive];
+        const state = scoresSessionEnCours[hist.id];
+
+        if(state.q1 === null) {
+            alert("⚠️ Cochez la question Q1 de détection avant de continuer.");
+            return;
+        }
+        if(state.q1 === 1 && hist.isFauxPas && (state.q2 === null || state.q3 === null || state.q4 === null || state.q5 === null)) {
+            alert("⚠️ Veuillez évaluer toutes les questions découlant de la détection positive.");
+            return;
+        }
+        if(state.q6 === null) {
+            alert("⚠️ Évaluez le contrôle mnésique (Q6) avant de valider.");
+            return;
+        }
+
+        if(indexHistoireActive < protocolHistoires.length - 1) {
+            indexHistoireActive++;
+            afficherHistoireCourante();
+        } else {
+            finaliserEtGenererRapport();
+        }
+    }
+
+    function finaliserEtGenererRapport() {
+        let scCog = 0; let scAff = 0; let scTet = 0; let scMem = 0; 
+
+        protocolHistoires.forEach(h => {
+            const s = scoresSessionEnCours[h.id];
+            if(h.isFauxPas) {
+                if(s.q1 === 1) scCog += 1;
+                if(s.q2 === 1) scCog += 1;
+                if(s.q3 === 1) scCog += 1;
+                if(s.q4 === 1) scCog += 1;
+                if(s.q5 === 1) scAff += 1;
+            } else {
+                if(s.q1 === 1) scTet += 1;
+            }
+            if(s.q6 === 1) scMem += 1;
+        });
+
+        let pcCog = Math.round((scCog / 20) * 100);
+        let pcAff = Math.round((scAff / 5) * 100);
+        let pcTet = Math.round((scTet / 5) * 100);
+        let pcMem = Math.round((scMem / 10) * 100);
+
+        const metadataSession = {
+            codePatient: document.getElementById('p-code').value.trim(),
+            dateExamen: document.getElementById('p-date').value,
+            nom: document.getElementById('p-nom').value,
+            prenom: document.getElementById('p-prenom').value,
+            age: document.getElementById('p-age').value,
+            sexe: document.getElementById('p-sexe').value,
+            examinateur: document.getElementById('p-examinateur').value,
+            scoreCog: scCog,
+            scoreAff: scAff,
+            scoreTet: scTet,
+            scoreMem: scMem
+        };
+
+        let db = JSON.parse(localStorage.getItem("ehs_errazi_fauxpas_db")) || [];
+        db = db.filter(item => !(item.codePatient === metadataSession.codePatient && item.dateExamen === metadataSession.dateExamen));
+        db.push(metadataSession);
+        localStorage.setItem("ehs_errazi_fauxpas_db", JSON.stringify(db));
+
+        document.getElementById('rep-code').innerText = metadataSession.codePatient;
+        document.getElementById('rep-date').innerText = metadataSession.dateExamen;
+        document.getElementById('rep-identite').innerText = `${metadataSession.nom} ${metadataSession.prenom}`;
+        document.getElementById('rep-examinateur').innerText = metadataSession.examinateur;
+        document.getElementById('rep-age').innerText = metadataSession.age;
+        document.getElementById('rep-sexe').innerText = metadataSession.sexe;
+
+        document.getElementById('r-sc-cog').innerText = scCog;
+        document.getElementById('r-pc-cog').innerText = pcCog;
+        document.getElementById('r-sc-aff').innerText = scAff;
+        document.getElementById('r-pc-aff').innerText = pcAff;
+        document.getElementById('r-sc-tet').innerText = scTet;
+        document.getElementById('r-pc-tet').innerText = pcTet;
+        document.getElementById('r-sc-mem').innerText = scMem;
+        document.getElementById('r-pc-mem').innerText = pcMem;
+
+        configurerBadge(document.getElementById('r-badge-cog'), pcCog, 75, 50);
+        configurerBadge(document.getElementById('r-badge-aff'), pcAff, 80, 60);
+        configurerBadge(document.getElementById('r-badge-tet'), pcTet, 80, 60);
+        configurerBadge(document.getElementById('r-badge-mem'), pcMem, 80, 70);
+
+        let htmlSemiologie = '';
+        if(scMem < 8) {
+            htmlSemiologie += `<p style="color:var(--color-severe); font-weight:bold; border:2px solid var(--color-severe); padding:10px; margin-bottom:15px; border-radius:6px;">
+                ⚠️ ALERTE MNÉSIQUE : L'indice de contrôle mnésique est anormal (${scMem}/10). Le fléchissement des performances en théorie de l'esprit peut s'expliquer par un défaut de rétention ou de compréhension factuelle des énoncés.
+            </p>`;
+        }
+        if(scTet < 4) {
+            htmlSemiologie += `<p style="color:var(--color-modere); font-weight:bold; border:2px solid var(--color-modere); padding:10px; margin-bottom:15px; border-radius:6px;">
+                ⚠️ ALERTE HISTOIRES TÉMOINS : Le patient a tendance à détecter des faux pas inexistants (${5 - scTet} erreur(s) sur 5). Risque de profil d'hyper-attribution d'intentions ou de méfiance psychosociale.
+            </p>`;
+        }
+
+        htmlSemiologie += `<p style="margin-bottom:12px;"><strong>Aspect Cognitif (ToM Cognitive) :</strong> La réussite est de <strong>${pcCog}%</strong>. `;
+        if(pcCog >= 75) {
+            htmlSemiologie += `Les processus de métareprésentation, de décodage des intentions cachées et d'attribution des états de connaissances d'autrui sont cliniquement préservés.</p>`;
+        } else if (pcCog >= 50) {
+            htmlSemiologie += `Il s'agit d'un déficit modéré. Le patient repère l'existence d'une dissonance en contexte psychosocial mais peine à décoder la fausse croyance ou à isoler le caractère involontaire de la maladresse.</p>`;
+        } else {
+            htmlSemiologie += `On objective un profil anormal caractérisé par une altération sévère du décodage cognitif. Le patient ne parvient pas à se décentrer de sa propre perspective cognitive.</p>`;
+        }
+
+        htmlSemiologie += `<p style="margin-bottom:12px;"><strong>Aspect Affectif (ToM Affective) :</strong> Le score s'élève à <strong>${scAff}/5</strong> (${pcAff}%). `;
+        if(pcAff >= 80) {
+            htmlSemiologie += `Les capacités de résonance émotionnelle et d'empathie à l'égard de la victime du Faux Pas sont cliniquement normales.</p>`;
+        } else if (pcAff >= 60) {
+            htmlSemiologie += `On remarque un fléchissement modéré de la théorie de l'esprit affective : le patient saisit la maladresse d'une façon logique mais intègre moins bien l'impact émotionnel subi par autrui.</p>`;
+        } else {
+            htmlSemiologie += `Le tableau objective une altération sévère de la composante affective, révélant un émoussement ou un découplage de l'empathie en contexte psychosocial.</p>`;
+        }
+
+        document.getElementById('analyse-semiologique-corps').innerHTML = htmlSemiologie;
+
+        let historiqueComplexe = db.filter(item => item.codePatient.toLowerCase() === metadataSession.codePatient.toLowerCase());
+        let htmlEvolution = '';
+        if(historiqueComplexe.length > 1) {
+            historiqueComplexe.sort((a,b) => new Date(a.dateExamen) - new Date(b.dateExamen));
+            htmlEvolution += `<p style="margin-bottom:10px;">Évolution comparative des performances longitudinales du patient :</p>`;
+            htmlEvolution += `<table class="report-table" style="font-size:13px;">
+                <tr style="background:#f1f5f9;"><th>Date de l'examen</th><th>ToM Cognitive (Max 20)</th><th>ToM Affective (Max 5)</th><th>Contrôle Mnésique (Max 10)</th></tr>`;
+            historiqueComplexe.forEach(h => {
+                htmlEvolution += `<tr>
+                    <td><strong>${h.dateExamen}</strong></td>
+                    <td>${h.scoreCog} (${Math.round((h.scoreCog/20)*100)}%)</td>
+                    <td>${h.scoreAff} (${Math.round((h.scoreAff/5)*100)}%)</td>
+                    <td>${h.scoreMem} (${Math.round((h.scoreMem/10)*100)}%)</td>
+                </tr>`;
+            });
+            htmlEvolution += `</table>`;
+        } else {
+            htmlEvolution += `<p style="font-style:italic; color:#64748b;">Première passation enregistrée pour ce patient.</p>`;
+        }
+        document.getElementById('corps-comparatif').innerHTML = htmlEvolution;
+
+        let htmlConclusion = '';
+        if(pcCog < 75 || pcAff < 60 || scTet < 4) {
+            htmlConclusion += `<p><strong>Conclusion :</strong> Profil en faveur d'un remaniement pathologique des processus de traitement psychosocial (Cognition Sociale). Ce profil justifie un accompagnement thérapeutique spécialisé ou une prise en charge en remédiation cognitive ciblée.</p>`;
+        } else {
+            htmlConclusion += `<p><strong>Conclusion :</strong> Les compétences métareprésentationnelles et le décodage de la cognition sociale (ToM Cognitive et Affective) se situent dans la norme fonctionnelle.</p>`;
+        }
+        document.getElementById('conclusion-recommandations-corps').innerHTML = htmlConclusion;
+
+        changerSection('section-report');
+    }
+
+    function configurerBadge(element, pourcentage, seuilNormal, seuilModere) {
+        element.className = "badge-status";
+        if(pourcentage >= seuilNormal) {
+            element.innerText = "Bien / Préservé";
+            element.classList.add("status-green");
+        } else if(pourcentage >= seuilModere) {
+            element.innerText = "Moins / Déficit Modéré";
+            element.classList.add("status-orange");
+        } else {
+            element.innerText = "Anormal / Déficit Sévère";
+            element.classList.add("status-red");
+        }
+    }
+</script>
+</body>
+</html>
